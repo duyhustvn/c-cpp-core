@@ -53,5 +53,9 @@ int main(int argc, char *argv[]) {
   }
 
   printf("Create %d threads.\n", NUM_THREADS);
+
+  /* The main thread is done, so we need to call pthread_exit explicitly to
+   *  permit the working threads to continue even after main completes.
+   */
   pthread_exit(NULL);
 }

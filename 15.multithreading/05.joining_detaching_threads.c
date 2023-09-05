@@ -92,5 +92,9 @@ int main(int argc, char *argv[]) {
            (char *)status);
   }
   printf("Main: program completed. Exiting.\n");
+
+  /* The main thread is done, so we need to call pthread_exit explicitly to
+   *  permit the working threads to continue even after main completes.
+   */
   pthread_exit(NULL);
 }
