@@ -32,7 +32,13 @@ void *incCount(void *t) {
     if (count == COUNT_LIMIT) {
       printf("incCount(): thread %ld, count = %d -- threshold reached", myID,
              count);
-      // https://hpc-tutorials.llnl.gov/posix/man/pthread_cond_signal.txt
+      /*
+      ** https://hpc-tutorials.llnl.gov/posix/man/pthread_cond_signal.txt
+      **
+      ** The pthread_cond_signal() routine is used to signal (or wake up)
+      ** another thread which is waiting on the condition variable. It should be
+      ** called after mutex is locked
+      */
       pthread_cond_signal(&countThresholdCv);
       printf("Just sent signal.\n");
     }
@@ -62,6 +68,14 @@ void *watchCount(void *t) {
     printf("watchCount(): thread %ld Count = %d. Going into wait...\n", myID,
            count);
     // https://hpc-tutorials.llnl.gov/posix/man/pthread_cond_wait.txt
+    /*
+      pthread_cond_wait() blocks the thread until the specified
+      condition is signalled. This routine should be called while mutex is
+      locked, and it will automatically release the mutex while it waits. After
+      signal is received and thread is awakened, mutex will be automatically
+      locked for use by the thread. The programmer is then responsible for
+      unlocking mutex when the thread is finished with it.
+     */
     pthread_cond_wait(&countThresholdCv, &countMutex);
     printf("watchCount(): thread %ld Condition signal received. Count = %d\n",
            myID, count);
